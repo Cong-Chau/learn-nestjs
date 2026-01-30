@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { LoggingMiddleware } from './middleware/logging/logging.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -15,6 +16,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
+
+  app.use(new LoggingMiddleware().use);
 
   app.useGlobalInterceptors(new ResponseInterceptor());
 
